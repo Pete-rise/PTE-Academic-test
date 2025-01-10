@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PTE Academic Mock Test - Phase 1</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .container {
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      max-width: 700px;
+      width: 100%;
+    }
+    .question {
+      margin: 20px 0;
+    }
+    .timer {
+      font-size: 1.2em;
+      font-weight: bold;
+      color: red;
+    }
+    .hidden {
+      display: none;
+    }
+    button {
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+    .instructions {
+      font-size: 1rem;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container" id="app">
+    <!-- Phase 1: Reading Section -->
+    <div id="welcome-screen">
+      <h1>Welcome to PTE Academic Mock Test - Phase 1</h1>
+      <p class="instructions">This section focuses on Reading. Read the question and select the correct answer within the time limit.</p>
+      <button id="start-btn">Start Reading Section</button>
+    </div>
+
+    <div id="question-screen" class="hidden">
+      <div class="question" id="question"></div>
+      <div class="timer" id="timer">Time Left: <span id="time-left">20</span> seconds</div>
+      <button id="next-btn">Next</button>
+    </div>
+
+    <div id="submit-screen" class="hidden">
+      <h2>Reading Section Completed!</h2>
+      <p>Thank you for completing this phase of the test.</p>
+      <button onclick="location.reload()">Restart</button>
+    </div>
+  </div>
+
+  <script>
+    const app = document.getElementById('app');
+    const welcomeScreen = document.getElementById('welcome-screen');
+    const questionScreen = document.getElementById('question-screen');
+    const submitScreen = document.getElementById('submit-screen');
+
+    const questionElement = document.getElementById('question');
+    const timerElement = document.getElementById('time-left');
+    const nextBtn = document.getElementById('next-btn');
+
+    const questions = [
+      "Which of the following is a synonym for 'quick'?\n(a) Slow\n(b) Fast\n(c) Heavy\n(d) Large",
+      "Which word fits in the blank: 'She _______ the book on the table.'\n(a) lays\n(b) laid\n(c) lie\n(d) lain",
+      "What is the meaning of the word 'meticulous'?\n(a) Careless\n(b) Thorough\n(c) Hasty\n(d) Rough",
+    ];
+
+    let currentQuestionIndex = 0;
+    let timeLeft = 20;
+    let timer;
+
+    function showScreen(screen) {
+      welcomeScreen.classList.add('hidden');
+      questionScreen.classList.add('hidden');
+      submitScreen.classList.add('hidden');
+      screen.classList.remove('hidden');
+    }
+
+    function startTimer() {
+      timeLeft = 20;
+      timerElement.textContent = timeLeft;
+      timer = setInterval(() => {
+        timeLeft--;
+        timerElement.textContent = timeLeft;
+        if (timeLeft <= 0) {
+          clearInterval(timer);
+          nextQuestion();
+        }
+      }, 1000);
+    }
+
+    function loadQuestion() {
+      if (currentQuestionIndex < questions.length) {
+        questionElement.textContent = questions[currentQuestionIndex];
+        startTimer();
+      } else {
+        showScreen(submitScreen);
+      }
+    }
+
+    function nextQuestion() {
+      clearInterval(timer);
+      currentQuestionIndex++;
+      if (currentQuestionIndex < questions.length) {
+        loadQuestion();
+      } else {
+        showScreen(submitScreen);
+      }
+    }
+
+    document.getElementById('start-btn').addEventListener('click', () => {
+      showScreen(questionScreen);
+      loadQuestion();
+    });
+
+    nextBtn.addEventListener('click', nextQuestion);
+  </script>
+</body>
+</html>
